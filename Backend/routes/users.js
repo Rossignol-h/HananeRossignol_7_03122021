@@ -5,9 +5,9 @@ const multer = require("../middleware/multer")
 
 router.post("/signup", authUser.checkusername, authUser.valid, userCtrl.signup)
 router.post("/login", authUser.valid, userCtrl.login)
-router.get("/Profile/:id", auth, userCtrl.getOneUser)
-router.get("/Profiles", auth, userCtrl.getAllUsers)
-router.put("/Profile/:id", auth, multer, userCtrl.updateUser)
-router.delete("/Profile/:id", auth, userCtrl.deleteUser)
+router.get("/profile/:id", auth, userCtrl.getOneUser)
+router.get("/profiles", auth, userCtrl.getAllUsers)
+router.put("/profile/:id", auth, multer, userCtrl.updateUser)
+router.delete("/profile/:id", auth, userCtrl.deleteUser)
 
 module.exports = router
