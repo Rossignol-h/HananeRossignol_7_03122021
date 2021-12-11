@@ -1,10 +1,9 @@
 "use strict"
 const { Model } = require("sequelize")
-
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // define association between table
+      // define association here
       models.User.hasMany(models.Post)
       models.User.hasMany(models.Comment)
       models.User.hasMany(models.Like)

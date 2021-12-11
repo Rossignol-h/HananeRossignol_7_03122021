@@ -51,5 +51,4 @@ MyDatabase.sequelize.sync().then(function () {
     console.log("Listening on " + bind)
   })
   server.listen(port)
-  require("./config/admin_config")
 })

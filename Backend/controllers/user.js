@@ -1,69 +1,54 @@
-const bcrypt = require("bcrypt")
-const MyDatabase = require("../models")
-const passwordCheker = require("../models/password")
-const token = require("../middleware/token")
-const fs = require("fs")
+const bcrypt = require("bcrypt") // chiffrement du password
+//const User = require("../models")
+const token = require("../middleware/token") // module qui génère le token
+const fs = require("fs") // gestion des fichiers
 
+const User = require("../models/user")
 //-------------------------------------------- SIGNUP -------------------
 
 exports.signup = async (req, res) => {
-  if (!passwordCheker.validate(req.body.password)) {
-    return res.status(400).json({ error: "Mot de passe non securisé !" })
-  } else {
-    try {
-      const user = await MyDatabase.User.findOne({
-        where: { email: req.body.email },
-      })
-      if (user !== null) {
-        if (user.username === req.body.username) {
-          return res.status(400).json({ error: "ce username est déjà utilisé" })
-        }
-      } else {
-        const encryptedEmail = CryptoJS.HmacSHA256(
-          req.body.email,
-          process.env.SECRET_CRYPTOJS
-        ).toString()
-        const hash = await bcrypt.hash(req.body.password, 10)
-        const newUser = await MyDatabase.User.create({
-          username: req.body.username,
-          email: encryptedEmail,
-          password: hash,
-          isAdmin: false,
-        })
-        res.status(201).send({
-          user: newUser,
-          message: `Votre compte est bien créé !`,
-        })
+  try {
+    const user = await User.findOne({
+      where: { email: req.body.email },
+    })
+    if (user !== null) {
+      if (user.username === req.body.username) {
+        return res.status(400).json({ error: "ce username est déjà utilisé" })
       }
-    } catch (error) {
-      return res.status(400).send({ error: "email déjà utilisé" })
+    } else {
+      const hash = await bcrypt.hash(req.body.password, 10)
+      const newUser = await User.User.create({
+        username: req.body.username,
+        email: req.body.email,
+        password: hash,
+        isAdmin: false,
+      })
+      res.status(201).send({
+        user: newUser,
+        message: `Votre compte est bien créé !`,
+      })
     }
+  } catch (error) {
+    return res.status(400).send({ error: "email déjà utilisé" })
   }
 }
 //-------------------------------------------- LOGIN -------------------
 
 exports.login = async (req, res) => {
-  // chek if this email is already in database
-  const encryptedEmail = CryptoJS.HmacSHA256(
-    req.body.email,
-    process.env.SECRET_CRYPTOJS
-  ).toString()
   try {
-    const user = await MyDatabase.User.findOne({
-      where: { email: encryptedEmail },
+    const user = await User.findOne({
+      where: { email: req.body.email },
     })
-    // if not error
     if (user === null) {
       return res.status(403).send({ error: "Connexion échouée" })
     } else {
-      // if find one: bcrypt will compare passwords
       const hash = await bcrypt.compare(req.body.password, user.password) //
       if (!hash) {
         return res.status(401).send({ error: "Mot de passe incorrect !" })
       } else {
-        // then Jsonwebtoken will create a token
         const tokenObject = await token.issueJWT(user)
         res.status(200).send({
+          // on renvoie le user et le token
           user: user,
           token: tokenObject.token,
           sub: tokenObject.sub,
@@ -79,24 +64,24 @@ exports.login = async (req, res) => {
 //------------------------------------------ GET ONE USER -----------------
 
 exports.getOneUser = async (req, res) => {
-  // find user by his Id
+  // on trouve l'utilisateur et on renvoie l'objet user
   try {
-    const user = await MyDatabase.User.findOne({
+    const user = await User.find.One({
       where: { id: req.params.id },
     })
     res.status(200).send(user)
   } catch (error) {
-    return res.status(500).send({ error: "utilisateur inconnu " })
+    return res.status(500).send({ error: "Erreur serveur" })
   }
 }
 
 //------------------------------------------ GET ALL USER -----------------
 
 exports.getAllUsers = async (req, res) => {
-  //
+  // on envoie tous les users sauf admin
   try {
-    const users = await MyDatabase.User.findAll({
-      attributes: ["username", "id", "avatar", "email"],
+    const users = await User.findAll({
+      attributes: ["username", "id", "avatar", "bio", "email"],
       where: {
         id: {
           [Op.ne]: 1,
@@ -112,21 +97,20 @@ exports.getAllUsers = async (req, res) => {
 //------------------------------------------ UPDATE USER -----------------
 
 exports.updateUser = async (req, res) => {
+  // modifier le profil
   const id = req.params.id
   try {
     const userId = token.getUserId(req)
     let newavatar
-    // try to find this user by his Id
-    let user = await MyDatabase.User.findOne({ where: { id: id } })
+    let user = await User.findOne({ where: { id: id } }) // on trouve le user
     if (userId === user.id) {
-      // add new avatar
       if (req.file && user.avatar) {
         newavatar = `${req.protocol}://${req.get("host")}/api/upload/${
           req.file.filename
         }`
-        // delete the old one from "upload"
         const filename = user.avatar.split("/upload")[1]
         fs.unlink(`upload/${filename}`, (err) => {
+          // s'il y avait déjà une avatar on la supprime
           if (err) console.log(err)
           else {
             console.log(`Deleted file: upload/${filename}`)
@@ -140,11 +124,13 @@ exports.updateUser = async (req, res) => {
       if (newavatar) {
         user.avatar = newavatar
       }
+      if (req.body.bio) {
+        user.bio = req.body.bio
+      }
       if (req.body.username) {
         user.username = req.body.username
       }
-      // update avatar + username to the database
-      const newUser = await user.save({ fields: ["username", "avatar"] })
+      const newUser = await user.save({ fields: ["username", "bio", "avatar"] }) // on sauvegarde les changements dans la bdd
       res.status(200).json({
         user: newUser,
         messageRetour: "Votre profil a bien été modifié",
@@ -161,22 +147,19 @@ exports.updateUser = async (req, res) => {
 
 //------------------------------------------ DELETE USER -----------------
 
-exports.deleteAccount = async (req, res) => {
+exports.updateUser = async (req, res) => {
   try {
-    // try to find this user by his id in database
     const id = req.params.id
-    const user = await MyDatabase.User.findOne({ where: { id: id } })
-    // delete the avatar if there is one in "upload"
+    const user = await User.findOne({ where: { id: id } })
     if (user.avatar !== null) {
       const filename = user.avatar.split("/upload")[1]
       fs.unlink(`upload/${filename}`, () => {
-        // delete this user from database
-        MyDatabase.User.destroy({ where: { id: id } })
+        // sil' y a une avatar on la supprime et on supprime le compte
+        User.User.destroy({ where: { id: id } })
         res.status(200).json({ messageRetour: "utilisateur supprimé" })
       })
-      // if no avatar just delete from database
     } else {
-      MyDatabase.User.destroy({ where: { id: id } })
+      User.User.destroy({ where: { id: id } }) // on supprime le compte
       res.status(200).json({ messageRetour: "utilisateur supprimé" })
     }
   } catch (error) {
