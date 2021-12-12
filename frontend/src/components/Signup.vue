@@ -1,59 +1,6 @@
-<template>
-  <v-container fluid class="signup-container">
-    <v-layout row class="signup-box">
-      <v-col lg="4" md="5" sm="7">
-        <v-card class="signup-card" color="text2" elevation="4" xs6>
-          <v-card-title flat dense dark>
-            <h1 class="font-weight-regular titre">Inscription</h1></v-card-title
-          >
-          <v-card-text class="font-weight-light">
-            <v-form v-model="isValid" autocomplete="off">
-              <v-text-field
-                label="username"
-                v-model="username"
-                type="text"
-                :rules="[(v) => !!v || 'username is required']"
-                required
-                class="input-group--focused"
-              ></v-text-field>
-              <v-text-field
-                label="email"
-                v-model="email"
-                type="email"
-                :rules="emailRules"
-                required
-                class="input-group--focused"
-                autocomplete="off"
-              ></v-text-field>
-              <v-text-field
-                label="mot de passe"
-                v-model="password"
-                type="password"
-                :rules="[(v) => !!v || 'Password is required']"
-                required
-                class="input-group--focused"
-              ></v-text-field>
-            </v-form>
-          </v-card-text>
-          <div class="danger-alert message" v-html="errorMessage" />
-          <div class="danger-alert message" v-html="message"></div>
-
-          <v-card-actions class="d-flex justify-center">
-            <v-btn
-              elevation="2"
-              :disabled="!isValid"
-              v-on:click.prevent="signup"
-              >Envoyer</v-btn
-            >
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-layout>
-  </v-container>
-</template>
-
 <script>
 import Auth from "../services/Auth.js"
+
 export default {
   name: "Signup",
   data() {
@@ -61,23 +8,14 @@ export default {
       username: "",
       email: "",
       password: "",
-      errorMessage: null,
-      message: null,
+      data: null,
       isValid: true,
       hasSignedUp: false,
-      emailRules: [
-        (v) => !!v || "L'email est obligatoire",
+      regexEmail: [
+        (v) => !!v || "Email est obligatoire",
         (v) =>
           /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
           "L'email doit être valide",
-      ],
-      usernameRules: [
-        (v) => v.length <= 30 || "Entre 3 et 30 caractères, sans symboles",
-      ],
-      passwordRules: [
-        (v) =>
-          v.length <= 30 ||
-          "Le mot de passe doit être de 8 lettres minimum, majuscules et minucules, pas de symboles",
       ],
     }
   },
@@ -89,8 +27,8 @@ export default {
           email: this.email,
           password: this.password,
         })
-        this.message = response.data.message
-        //this.$store.dispatch("setToken", response.data.token)
+        this.data = response.data
+
         this.$store.dispatch("setUser", response.data.user)
         this.$store.dispatch("getUserById", response.data.user.id)
 
@@ -99,13 +37,78 @@ export default {
           router.push("/login")
         }, 1500)
       } catch (error) {
-        alert(error)
-        this.errorMessage = error.response.data.error
-        setTimeout(() => {
-          this.errorMessage = ""
-        }, 1500)
+        console.log(error)
       }
     },
   },
 }
 </script>
+
+<!--------------------------------- HTML ----------------->
+
+<template>
+  <v-container fluid class="signup-container">
+    <v-row justify="center">
+      <v-col lg="4" md="5" sm="7">
+        <v-card color="text2" elevation="3" xs6>
+          <v-card-title class="flat dense dark">
+            <h1 class="font-weight-regular titre">Inscription</h1></v-card-title
+          >
+          <v-card-text class="font-weight-light">
+            <v-form v-model="isValid" autocomplete="off">
+              <v-text-field
+                label="pseudo*"
+                v-model="username"
+                type="text"
+                :counter="10"
+                :rules="[(v) => !!v || 'Le pseudo est obligatoire']"
+                required
+              ></v-text-field>
+              <v-text-field
+                label="email*"
+                v-model="email"
+                type="email"
+                :counter="20"
+                :rules="regexEmail"
+                required
+                autocomplete="off"
+              ></v-text-field>
+              <v-text-field
+                label="mot de passe*"
+                :append-icon="value ? 'mdi-eye-off' : 'mdi-eye'"
+                @click:append="() => (value = !value)"
+                :type="value ? 'password' : 'text'"
+                v-model="password"
+                :counter="20"
+                hint="8 caractères, 1 Maj et 1 chiffres"
+                :rules="[(v) => !!v || 'Mot de passe obligatoire']"
+                required
+              >
+              </v-text-field>
+            </v-form>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn
+              block
+              elevation="2"
+              :disabled="!isValid"
+              v-on:click.prevent="signup"
+              >Envoyer
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<!--------------------------------- CSS ----------------->
+<style scoped>
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+</style>
