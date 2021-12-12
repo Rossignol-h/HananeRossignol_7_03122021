@@ -1,56 +1,46 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
+    <MyHeader />
     <v-main>
-      <Home />
+      <router-view></router-view>
+      <!-- Display view pages here based on route -->
     </v-main>
   </v-app>
 </template>
 
 <script>
-import Home from "./views/Home.vue"
-
+import MyHeader from "./components/Header.vue"
+import "../public/style.css"
 export default {
-  name: "App",
-
+  name: "app",
   components: {
-    Home,
+    MyHeader,
   },
-
-  data: () => ({
-    //
-  }),
+  data: () => {
+    return {}
+  },
+  computed: {
+    user() {
+      return this.$store.getters.user
+    },
+  },
+  mounted() {
+    if (this.user.email) {
+      this.$store.dispatch("getUsers")
+      this.$store.dispatch("getUserById", this.user.id)
+    }
+  },
 }
 </script>
+
+<style>
+.v-main {
+  background: rgb(209, 81, 90);
+  background: linear-gradient(
+    190deg,
+    rgba(209, 81, 90, 1) 0%,
+    rgba(235, 125, 133, 0.9920167896260067) 46%,
+    rgba(216, 216, 216, 1) 92%
+  );
+}
+</style>

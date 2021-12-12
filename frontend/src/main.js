@@ -3,7 +3,7 @@ import Vuetify from "vuetify"
 import vuetify from "./plugins/vuetify"
 import App from "./App.vue"
 import VueRouter from "vue-router"
-import Routes from "./routes"
+import Routes from "./router/index"
 import store from "./store/store" // vuex store instance
 import { sync } from "vuex-router-sync"
 import axios from "axios"
