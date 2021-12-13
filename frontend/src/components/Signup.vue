@@ -9,6 +9,7 @@ export default {
       email: "",
       password: "",
       data: null,
+      value: String,
       isValid: true,
       hasSignedUp: false,
       regexEmail: [
@@ -20,6 +21,9 @@ export default {
     }
   },
   methods: {
+    loginURL() {
+      this.$router.push("/login")
+    },
     async signup() {
       try {
         const response = await Auth.signup({
@@ -28,7 +32,6 @@ export default {
           password: this.password,
         })
         this.data = response.data
-
         this.$store.dispatch("setUser", response.data.user)
         this.$store.dispatch("getUserById", response.data.user.id)
 
@@ -47,13 +50,27 @@ export default {
 <!--------------------------------- HTML ----------------->
 
 <template>
-  <v-container fluid class="signup-container">
+  <v-container fluid class="flex-container">
     <v-row justify="center">
       <v-col lg="4" md="5" sm="7">
-        <v-card color="text2" elevation="3" xs6>
-          <v-card-title class="flat dense dark">
-            <h1 class="font-weight-regular titre">Inscription</h1></v-card-title
+        <v-card class="pa-6" color="text2" elevation="3" xs6>
+          <!----------------  link to login page --------->
+          <v-btn
+            @click="loginURL()"
+            :disabled="loading"
+            class="text-caption text-decoration-underline text-lowercase"
+            color="grey darken-2"
+            plain
           >
+            Vous avez déjà un compte?
+          </v-btn>
+          <!----------------  Bloc signup --------->
+
+          <v-card-title class="text-center dark">
+            <h1 class="font-weight-regular">Inscription</h1>
+          </v-card-title>
+          <v-spacer></v-spacer>
+
           <v-card-text class="font-weight-light">
             <v-form v-model="isValid" autocomplete="off">
               <v-text-field
@@ -87,10 +104,14 @@ export default {
               </v-text-field>
             </v-form>
           </v-card-text>
+          <!----------------  Submit form --------->
 
           <v-card-actions>
             <v-btn
+              type="submit"
               block
+              depressed
+              color="primary"
               elevation="2"
               :disabled="!isValid"
               v-on:click.prevent="signup"
@@ -102,13 +123,3 @@ export default {
     </v-row>
   </v-container>
 </template>
-
-<!--------------------------------- CSS ----------------->
-<style scoped>
-.signup-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 90vh;
-}
-</style>

@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <v-toolbar elevation="3" app>
+    <v-toolbar elevation="3">
       <v-spacer></v-spacer>
       <v-toolbar-title right class="grey--text darken-4 d-flex align-center">
         <v-img src="../assets/logo-solo-coral.svg" width="50"> </v-img>
