@@ -37,6 +37,7 @@ export default {
     },
     deleteComment(id) {
       this.$store.dispatch("deleteComment", id)
+      location.reload()
     },
 
     likePost(id) {
@@ -79,10 +80,9 @@ export default {
       <v-icon>mdi-chevron-double-up</v-icon>
     </v-btn>
 
-    <!---------- fixed floating btn link to create Post -->
+    <!---------- fixed floating btn link to create Post -v-show="fab"-->
     <v-btn
       v-scroll="createPost"
-      v-show="fab"
       dark
       fixed
       top

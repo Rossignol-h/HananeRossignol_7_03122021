@@ -67,6 +67,7 @@ export default {
 
     deleteComment(id) {
       this.$store.dispatch("deleteComment", id)
+      location.reload()
     },
   },
 }
@@ -209,9 +210,9 @@ export default {
             <v-btn
               @click="show = !show"
               text
-              aria-label="accès commentaires"
+              aria-label="Bouton pour commenter"
               class="white--text"
-              color="red"
+              color="red darken-2"
               depressed
             >
               Commentaires
@@ -257,14 +258,12 @@ export default {
                   v-model="isValid"
                   @submit.prevent="onSubmitComment(post.id)"
                   enctype="multipart/form-data"
-                  class="validate comment-form"
                 >
                   <v-text-field
                     name="input-1-3"
                     label="ton commentaire"
                     v-model="data.commentMessage"
                     auto-grow
-                    class="comment-form__message input-group--focused"
                   >
                   </v-text-field>
                   <!--------------- btn submit comment ------>
@@ -326,26 +325,22 @@ export default {
                   <!------------------------ if owner of comment 
                   Or Admin = show this btn -------------------------->
 
-                  <v-tooltip bottom>
-                    <template
-                      v-if="
-                        $store.state.user.id === comment.UserId ||
-                        $store.state.user.isAdmin === true
-                      "
-                      v-slot:activator="{ on, attrs }"
-                    >
-                      <!----------------------- Btn delete Comment --------->
-                      <v-btn fab primary small v-bind="attrs" v-on="on">
-                        <v-icon
-                          @click="deleteComment(comment.id)"
-                          aria-label="supprimer commentaire"
-                          color="red"
-                          >mdi-delete-forever
-                        </v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Supprimer</span>
-                  </v-tooltip>
+                  <!----------------------- Btn delete Comment --------->
+                  <v-btn
+                    v-if="
+                      $store.state.user.id === comment.UserId ||
+                      $store.state.user.isAdmin === true
+                    "
+                    @click="deleteComment(comment.id)"
+                    fab
+                    primary
+                    small
+                  >
+                    <v-icon aria-label="supprimer commentaire" color="red"
+                      >mdi-delete-forever
+                    </v-icon>
+                  </v-btn>
+
                   <!---------------------------------------- End ------->
                 </v-list-item>
                 <v-divider></v-divider>

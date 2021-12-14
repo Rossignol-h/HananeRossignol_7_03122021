@@ -44,7 +44,7 @@ export default {
         <v-list-item-title>{{ user.username }}</v-list-item-title>
         <!---------------------------------- Feed links -->
 
-        <v-btn icon @click.stop="mini = !mini">
+        <v-btn icon @click.stop="mini = !mini" aria-pressed="mixed">
           <v-icon>mdi-chevron-double-left</v-icon>
         </v-btn>
       </v-list-item>
