@@ -108,14 +108,14 @@ export default {
 
                 <template v-slot:default="dialog">
                   <v-card>
-                    <v-toolbar class="text-h6" color="red darken-3" dark
+                    <v-toolbar class="text-h6" color="grey lighten-1" dark
                       >Confirmation</v-toolbar
                     >
-                    <v-card-text class="text-h6 pa-12 justify-center">
-                      Suppression de votre compte?
+                    <v-card-text class="text-h6 pa-11 justify-center">
+                      Suppression de votre compte ?
                     </v-card-text>
+                    <!------------- Popup cancel btn ---------->
                     <v-card-actions class="justify-center">
-                      <!------------- Popup cancel btn ---------->
                       <v-btn
                         color="blue-grey"
                         class="ma-2 white--text"
@@ -172,7 +172,7 @@ export default {
               <!------------ btn submit form -------------->
               <div>
                 <v-btn
-                  class="mt-3 indigo dark"
+                  class="white--text mt-4 light-blue darken-4"
                   block
                   @click.prevent="onSubmit(user.id)"
                   :disabled="!isValid"
@@ -190,15 +190,12 @@ export default {
 <!------------------------------------- CSS ------------------------>
 <style scoped>
 .profile-card {
-  font-family: "Open Sans", Arial, sans-serif;
   position: relative;
   float: left;
-  /*overflow: hidden;*/
   width: 100%;
   text-align: center;
   background-color: rgb(201, 243, 16);
   height: 420px;
-  /*border: 0.3rem solid #efefef;*/
   border-radius: 0.6rem;
 }
 .profile-card .background-block {
@@ -221,7 +218,6 @@ export default {
 .profile-card .card-content {
   width: 100%;
   padding: 15px 25px;
-
   float: left;
   background: #eceaea;
   height: 60%;
@@ -255,7 +251,10 @@ export default {
   text-transform: capitalize;
   letter-spacing: 0.06rem;
   margin: 0 0 5px;
-  font-weight: 600;
+  font-weight: 5 00;
   font-size: 25px;
+}
+.submit {
+  color: aliceblue;
 }
 </style>
