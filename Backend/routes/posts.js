@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const postsCtrl = require("../controllers/post")
+const postsCtrl = require("../controllers/posts")
 const auth = require("../middleware/auth")
 const multer = require("../middleware/multer")
 

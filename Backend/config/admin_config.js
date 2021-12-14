@@ -1,9 +1,9 @@
-const User = require("../config/database_config")
+const MyDatabase = require("../models")
 const bcrypt = require("bcrypt")
 
 function createAdmin(req, res) {
   // check if an admin account already exist
-  User.findOne({
+  MyDatabase.User.findOne({
     where: { email: "admin@groupomania.com" } || { username: "admin" },
   })
     .then((user) => {
@@ -12,7 +12,7 @@ function createAdmin(req, res) {
         bcrypt
           .hash("Administrateur", 10)
           .then((hash) => {
-            const admin = User.create({
+            const admin = MyDatabase.User.create({
               username: "admin",
               email: "admin@groupomania.com",
               password: hash,

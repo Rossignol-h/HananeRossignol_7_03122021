@@ -10,7 +10,7 @@ const sequelize = new Sequelize(
     host: "localhost",
   }
 )
-//------------------------------------ CONNEXION & SYNCHRONIZE TEST ------
+//------------------------------------ Connexion & synchronise Test ------
 
 sequelize
   .authenticate()
@@ -26,5 +26,5 @@ sequelize
   })
   .catch((error) => console.log(`Failed to synchronized  : ${error}`))
 
-//---------------------------------------- EXPORT ---------------------
+//---------------------------------------- export ---------------------
 module.exports = sequelize
