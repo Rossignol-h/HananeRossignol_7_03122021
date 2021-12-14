@@ -39,7 +39,7 @@ export default {
       <!------------------------------- Header: logo & username -->
       <v-list-item class="px-2">
         <v-list-item-avatar>
-          <v-img src="../assets/logo-solo-coral.svg"></v-img>
+          <v-img src="../assets/red-logo.svg"></v-img>
         </v-list-item-avatar>
         <v-list-item-title>{{ user.username }}</v-list-item-title>
         <!---------------------------------- Feed links -->

@@ -76,7 +76,7 @@ export default {
 
 <template>
   <div>
-    <v-card class="posts-card mx-auto mt-4 mb-4 pb-5" round>
+    <v-card class="mx-auto mt-4 mb-4 pb-5" round>
       <div>
         <div class="d-flex justify-space-between pr-2">
           <v-card-title class="post-title">
@@ -101,7 +101,7 @@ export default {
             </v-avatar>
             <!----------------- Username & Date display -------------->
 
-            <div class="nom-date mt-3">
+            <div class="mt-3">
               <span class="username text-left ml-5">{{
                 post.User.username
               }}</span>

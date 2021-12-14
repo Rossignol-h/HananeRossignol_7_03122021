@@ -1,0 +1,10 @@
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+
+* {
+  color: #091f43;
+}

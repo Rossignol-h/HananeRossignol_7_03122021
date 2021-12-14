@@ -73,7 +73,6 @@ export default {
           <!----------------- User avatar display --------------->
           <div class="profile-thumb-block">
             <img
-              v-if="user.avatar"
               :src="user.avatar"
               alt="photo de l'utilisateur"
               class="profile"
@@ -87,7 +86,11 @@ export default {
             <div>
               <!------------ Btn delete user -------------->
 
-              <v-dialog transition="dialog-top-transition" max-width="600">
+              <v-dialog
+                v-model="dialog"
+                transition="dialog-top-transition"
+                max-width="600"
+              >
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     color="white"
@@ -95,7 +98,7 @@ export default {
                     class="mx-2"
                     fab
                     small
-                    outline
+                    outlined
                     v-bind="attrs"
                     v-on="on"
                   >
@@ -106,38 +109,36 @@ export default {
                 </template>
                 <!------------- Popup for confirm delete user ---------->
 
-                <template v-slot:default="dialog">
-                  <v-card>
-                    <v-toolbar class="text-h6" color="grey lighten-1" dark
-                      >Confirmation</v-toolbar
+                <v-card>
+                  <v-toolbar class="text-h6" color="grey lighten-1" dark
+                    >Confirmation</v-toolbar
+                  >
+                  <v-card-text class="text-h6 pa-11 justify-center">
+                    Suppression de votre compte ?
+                  </v-card-text>
+                  <!------------- Popup cancel btn ---------->
+                  <v-card-actions class="justify-center">
+                    <v-btn
+                      color="blue-grey"
+                      class="ma-2 white--text"
+                      @click="dialog = false"
                     >
-                    <v-card-text class="text-h6 pa-11 justify-center">
-                      Suppression de votre compte ?
-                    </v-card-text>
-                    <!------------- Popup cancel btn ---------->
-                    <v-card-actions class="justify-center">
-                      <v-btn
-                        color="blue-grey"
-                        class="ma-2 white--text"
-                        @click="dialog.value = false"
-                      >
-                        Annuler
-                        <v-icon right dark> mdi-login-variant </v-icon>
-                      </v-btn>
-                      <!------------- Popup Confirm btn ---------->
-                      <v-btn
-                        color="blue-grey"
-                        class="ma-2 white--text"
-                        @click="deleteUser(user.id)"
-                      >
-                        Confirmer
-                        <v-icon right dark>
-                          mdi-checkbox-marked-circle-outline
-                        </v-icon>
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </template>
+                      Annuler
+                      <v-icon right dark> mdi-login-variant </v-icon>
+                    </v-btn>
+                    <!------------- Popup Confirm btn ---------->
+                    <v-btn
+                      color="blue-grey"
+                      class="ma-2 white--text"
+                      @click="deleteUser(user.id)"
+                    >
+                      Confirmer
+                      <v-icon right dark>
+                        mdi-checkbox-marked-circle-outline
+                      </v-icon>
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
               </v-dialog>
             </div>
             <!------------ Update username-------------->
@@ -147,7 +148,6 @@ export default {
                 <v-text-field
                   label="Nouveau pseudo"
                   v-model="newUsername"
-                  required
                   counter="10"
                   prepend-icon="mdi-account-edit"
                   hint="entre 3 et 10 caractères"
