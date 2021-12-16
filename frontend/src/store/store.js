@@ -180,12 +180,12 @@ export default new Vuex.Store({
           const newUser = response.data
           commit("UPDATE_USER", id, newUser)
         })
-        .then(() => {
-          PostApi.getPosts().then((response) => {
-            const posts = response.data
-            commit("GET_POSTS", posts)
-          })
-        })
+      //.then(() => {
+      //  PostApi.getPosts().then((response) => {
+      //   const posts = response.data
+      //  commit("GET_POSTS", posts)
+      // })
+      //})
     },
     // end users
 

@@ -2,7 +2,6 @@
   <v-app>
     <v-main>
       <router-view></router-view>
-      <!-- Display view pages here based on route -->
     </v-main>
   </v-app>
 </template>

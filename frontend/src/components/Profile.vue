@@ -28,20 +28,20 @@ export default {
     uploadImage() {
       const file = this.$refs.file.files[0]
       this.file = file
-      console.log(this.file)
     },
-    onSubmit() {
+
+    updateUser() {
+      const userId = this.$store.state.user.id
       const formData = new FormData()
       formData.append("username", this.newUsername)
-      if (this.file !== null) {
-        formData.append("image", this.file)
-      }
-      this.$store.dispatch("getUsers")
-      this.$store.dispatch("getUserById", this.user.id)
-      this.$store.dispatch("updateUser", formData)
-      this.$store.dispatch("getUserById", this.user.id)
-      //this.$router.go()
+      formData.append("image", this.file),
+        this.$store.dispatch("updateUser", formData)
+      setTimeout(() => {
+        this.$store.dispatch("getUserById", userId)
+        alert("profil mis a jour !")
+      }, 300)
     },
+
     deleteUser(id) {
       this.$store.dispatch("deleteUser", id)
       this.$store.dispatch("logOut")
@@ -130,7 +130,7 @@ export default {
                     <v-btn
                       color="blue-grey"
                       class="ma-2 white--text"
-                      @click="deleteUser(user.id)"
+                      @click.prevent="deleteUser(user.id)"
                     >
                       Confirmer
                       <v-icon right dark>
@@ -143,7 +143,7 @@ export default {
             </div>
             <!------------ Update username-------------->
 
-            <form enctype="multipart/form-data" method="put">
+            <form enctype="multipart/form-data">
               <div>
                 <v-text-field
                   label="Nouveau pseudo"
@@ -174,8 +174,7 @@ export default {
                 <v-btn
                   class="white--text mt-4 light-blue darken-4"
                   block
-                  @click.prevent="onSubmit(user.id)"
-                  :disabled="!isValid"
+                  @click.prevent="updateUser(user.id)"
                   >Envoyer
                 </v-btn>
               </div>
