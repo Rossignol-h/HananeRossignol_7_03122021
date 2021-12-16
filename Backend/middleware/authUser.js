@@ -24,8 +24,7 @@ exports.valid = (req, res, next) => {
     !passwordSchema.validate(req.body.password)
   ) {
     return res.status(400).send({
-      error:
-        "Merci de vérifier ton adresse mail, ton mot de passe doit contenir au minum 8 lettres avec des minuscules et majuscules  ",
+      error: "Merci de vérifier vos saisies",
     })
   } else if (
     emailValidator.validate(req.body.email) ||

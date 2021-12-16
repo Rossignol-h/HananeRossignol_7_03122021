@@ -20,9 +20,7 @@ export default {
       return this.$store.getters.user
     },
   },
-  beforeMount() {
-    this.$store.dispatch("getUserById")
-  },
+
   methods: {
     homeURL() {
       this.$router.push("/")
@@ -42,12 +40,14 @@ export default {
       this.$store.dispatch("getUserById", this.user.id)
       this.$store.dispatch("updateUser", formData)
       this.$store.dispatch("getUserById", this.user.id)
-      location.reload()
+      //this.$router.go()
     },
     deleteUser(id) {
       this.$store.dispatch("deleteUser", id)
       this.$store.dispatch("logOut")
-      this.homeURL()
+      setTimeout(() => {
+        this.homeURL()
+      }, 1000)
     },
   },
 }

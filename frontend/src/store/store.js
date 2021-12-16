@@ -229,16 +229,9 @@ export default new Vuex.Store({
         })
     },
     deletePost({ commit }, id) {
-      PostApi.deletePost(id)
-        .then(() => {
-          commit("DELETE_POST", id)
-        })
-        .then(() => {
-          PostApi.getPosts().then((response) => {
-            const posts = response.data
-            commit("GET_POSTS", posts)
-          })
-        })
+      PostApi.deletePost(id).then(() => {
+        commit("DELETE_POST", id)
+      })
     },
 
     // end posts
@@ -285,16 +278,9 @@ export default new Vuex.Store({
         })
     },
     deleteComment({ commit }, id) {
-      PostApi.deleteComment(id)
-        .then(() => {
-          commit("DELETE_COMMENT", id)
-        })
-        .then(() => {
-          PostApi.getPosts().then((response) => {
-            const posts = response.data
-            commit("GET_POSTS", posts)
-          })
-        })
+      PostApi.deleteComment(id).then(() => {
+        commit("DELETE_COMMENT", id)
+      })
     },
   },
 })

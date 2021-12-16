@@ -48,10 +48,10 @@ puis
 
     node server (ou nodemon serve si il est présent dans votre machine)
 
-    Un message devrait vous annoncer  :
+Un message devrait vous annoncer :
 
-Listening on port 3000
-{ message: 'compte admin créé !' }
+    Listening on port 3000
+    { message: 'compte admin créé !' }
 
 ## Utilisation
 

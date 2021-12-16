@@ -95,7 +95,7 @@ exports.getAllPosts = async (req, res) => {
       include: [
         {
           model: MyDatabase.User,
-          attributes: ["username", "id", "avatar"],
+          attributes: ["username", "id", "avatar", "isAdmin"],
         },
         {
           model: MyDatabase.Like,
@@ -108,7 +108,7 @@ exports.getAllPosts = async (req, res) => {
           include: [
             {
               model: MyDatabase.User,
-              attributes: ["avatar", "username"],
+              attributes: ["avatar", "username", "isAdmin"],
             },
           ],
         },
@@ -248,14 +248,12 @@ exports.addComment = async (req, res) => {
 exports.deleteComment = async (req, res) => {
   try {
     const userId = token.getUserId(req)
-    const checkIfAdmin = await MyDatabase.User.findOne({
-      where: { id: userId },
-    })
+    const checkAdmin = await MyDatabase.User.findOne({ where: { id: userId } })
     const comment = await MyDatabase.Comment.findOne({
       where: { id: req.params.id },
     })
 
-    if (userId === comment.UserId || checkIfAdmin.isAdmin === true) {
+    if (userId === comment.UserId || checkAdmin.isAdmin === true) {
       MyDatabase.Comment.destroy(
         { where: { id: req.params.id } },
         { truncate: true }
@@ -265,6 +263,6 @@ exports.deleteComment = async (req, res) => {
       res.status(401).json({ message: "Vous n'avez pas les droits requis" })
     }
   } catch (error) {
-    return res.status(500).send({ error: "Erreur serveur" })
+    return res.status(501).send({ error: "Erreur serveur" })
   }
 }

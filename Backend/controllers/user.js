@@ -1,5 +1,4 @@
 const bcrypt = require("bcrypt") // create hashed password
-const CryptoJS = require("crypto-js") // create crypted email
 const MyDatabase = require("../models") // database settings
 const token = require("../middleware/token") // create & verify token
 const fs = require("fs") // file management
@@ -8,13 +7,9 @@ require("dotenv").config() // loads environment variables
 //-------------------------------------------- SIGNUP -------------------
 
 exports.signup = async (req, res) => {
-  const encryptedEmail = CryptoJS.HmacSHA256(
-    req.body.email,
-    process.env.SECRET_CRYPTOJS
-  ).toString()
   try {
     const user = await MyDatabase.User.findOne({
-      where: { email: encryptedEmail },
+      where: { email: req.body.email },
     })
     if (user !== null) {
       if (user.username === req.body.username) {
@@ -24,7 +19,7 @@ exports.signup = async (req, res) => {
       const hash = await bcrypt.hash(req.body.password, 10)
       const newUser = await MyDatabase.User.create({
         username: req.body.username,
-        email: encryptedEmail,
+        email: req.body.email,
         password: hash,
         isAdmin: false,
       })
@@ -40,13 +35,9 @@ exports.signup = async (req, res) => {
 //-------------------------------------------- LOGIN -------------------
 
 exports.login = async (req, res) => {
-  const encryptedEmail = CryptoJS.HmacSHA256(
-    req.body.email,
-    process.env.SECRET_CRYPTOJS
-  ).toString()
   try {
     const user = await MyDatabase.User.findOne({
-      where: { email: encryptedEmail },
+      where: { email: req.body.email },
     })
     if (user === null) {
       return res.status(403).send({ error: "Connexion échouée" })

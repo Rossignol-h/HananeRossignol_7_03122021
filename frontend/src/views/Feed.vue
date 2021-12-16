@@ -1,6 +1,6 @@
 <script>
 import Sidebar from "../components/Sidebar.vue"
-import Posts from "@/components/Posts.vue"
+import Posts from "../components/Posts.vue"
 
 export default {
   name: "Feed",
@@ -37,7 +37,6 @@ export default {
     },
     deleteComment(id) {
       this.$store.dispatch("deleteComment", id)
-      location.reload()
     },
 
     likePost(id) {
@@ -102,7 +101,7 @@ export default {
           <div class="feed-header">
             <v-img width="250" src="../assets/feed-logo.svg"> </v-img>
 
-            <h1 class="text-h5 text--white text-center">Réseau social</h1>
+            <h1 class="text-h4 text-center">Réseau social</h1>
           </div>
         </v-system-bar>
       </v-col>
@@ -157,12 +156,9 @@ export default {
 }
 
 #feed-header {
-  background: url(https://raw.githubusercontent.com/khadkamhn/day-01-login-form/master/img/bg.jpg)
-    center no-repeat;
-  box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24),
-    0 17px 50px 0 rgba(0, 0, 0, 0.19);
-}
-.feed-header {
   background: rgba(40, 57, 101, 0.5);
+}
+h1 {
+  color: aliceblue;
 }
 </style>

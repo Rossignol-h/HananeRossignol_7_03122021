@@ -1,4 +1,6 @@
 <script>
+//import PostApi from "../services/PostApi"
+
 export default {
   name: "Posts",
   components: {},
@@ -40,13 +42,8 @@ export default {
   },
 
   methods: {
-    reloadPage() {
-      window.location.reload()
-    },
-
     deletePost() {
       this.$emit("deletePost", this.post.id)
-      window.location.reload()
     },
     likePost() {
       this.$emit("likePost", this.post.id)
@@ -67,7 +64,10 @@ export default {
 
     deleteComment(id) {
       this.$store.dispatch("deleteComment", id)
-      location.reload()
+      setTimeout(() => {
+        this.$store.dispatch("getPosts")
+        this.$store.dispatch("getPostById", this.post.id)
+      }, 300)
     },
   },
 }
@@ -242,7 +242,7 @@ export default {
                 color="blue darken-2"
                 overlap
               >
-                <v-icon large color="red"> mdi-heart </v-icon>
+                <v-icon :color="isLiked" large> mdi-heart </v-icon>
               </v-badge>
             </div>
           </div>
@@ -317,29 +317,35 @@ export default {
                     ></strong>
                     <!-------------------- Comment text display ---------->
 
-                    <span
-                      v-html="comment.message"
-                      class="text-left comment__message"
-                    ></span>
+                    <span v-html="comment.message" class="text-left"></span>
                   </v-list-item-content>
                   <!------------------------ if owner of comment 
-                  Or Admin = show this btn -------------------------->
+                  --------------------------Or Admin = show this btn --->
 
                   <!----------------------- Btn delete Comment --------->
-                  <v-btn
+                  <v-tooltip
                     v-if="
                       $store.state.user.id === comment.UserId ||
                       $store.state.user.isAdmin === true
                     "
-                    @click="deleteComment(comment.id)"
-                    fab
-                    primary
-                    small
+                    bottom
                   >
-                    <v-icon aria-label="supprimer commentaire" color="red"
-                      >mdi-delete-forever
-                    </v-icon>
-                  </v-btn>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        class="mx-2"
+                        fab
+                        primary
+                        x-small
+                        v-bind="attrs"
+                        v-on="on"
+                        aria-label="supprimer le post"
+                        @click="deleteComment(comment.id)"
+                      >
+                        <v-icon dense> mdi-delete-forever </v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Supprimer</span>
+                  </v-tooltip>
 
                   <!---------------------------------------- End ------->
                 </v-list-item>
